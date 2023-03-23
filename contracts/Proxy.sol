@@ -1,23 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-// Uncomment this line to use console.log
-// import "hardhat/console.sol";
+import "./StorageSlot.sol";
 
-contract Proxy{
-    uint public x=0;
-    address implementation;
-
-  
-
-    function changeImplementation(address add)external{
-        implementation=add;
-
+contract Proxy {
+    function changeImplementation(address _implementation) external {
+        StorageSlot.getAddressSlot(keccak256("impl")).value = _implementation;
     }
-    fallback() external{
-        (bool s,)=implementation.delegatecall(msg.data);
-        require(s);
 
+    fallback() external {
+        (bool success, ) = StorageSlot.getAddressSlot(keccak256("impl")).value.delegatecall(msg.data);
+        require(success);
     }
 }
 contract Logic1{
