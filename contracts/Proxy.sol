@@ -8,12 +8,15 @@ contract Proxy{
     
     address implementation;
 
-    function changeX(uint _x) external{
-      Logic1(implementation).changeX(_x);
-    }
+  
 
     function changeImplementation(address add)external{
         implementation=add;
+
+    }
+    fallback() external{
+        (bool s,)=implementation.call(msg.data);
+        require(s);
 
     }
 }
