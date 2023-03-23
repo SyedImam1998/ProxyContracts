@@ -30,4 +30,7 @@ contract Logic2{
     function changeX(uint _x) external{
         x=_x;
     }
+    function tripleX() external{
+        x*=3;
+    }
 }

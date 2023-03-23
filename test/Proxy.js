@@ -33,6 +33,26 @@ describe("Lock", function () {
       expect(await await logic1.x()).to.equal(50);
     });
 
+
+    it("Upgrading Contracts", async function () {
+      const { proxy,logic1,logic2 } = await loadFixture(deployFixture);
+
+      await proxy.changeImplementation(logic1.address);
+      assert.equal(await logic1.x(),0);
+      
+      await proxy.changeX(50);
+      assert.equal(await logic1.x(),50);
+      ////logic 2
+      await proxy.changeImplementation(logic2.address);
+      assert.equal(await logic2.x(),0);
+      
+      await proxy.changeX(150);
+      assert.equal(await logic2.x(),150);
+
+      
+      
+    });
+
     
  
 
