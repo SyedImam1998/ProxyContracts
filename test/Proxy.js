@@ -19,39 +19,40 @@ describe("Lock", function () {
     const logic2=await Logic2.deploy();
 
     /// here proxy abi donot have the changgeX fuction so we supply the logic1 abi so etheres won't throw error.
-    const ProxyUpgrade= await ethers.getContractAt("Logic1",proxy.address)
+    const ProxyUpgrade1= await ethers.getContractAt("Logic1",proxy.address)
+    const ProxyUpgrade2= await ethers.getContractAt("Logic1",proxy.address)
 
-    return{proxy,logic1,logic2,ProxyUpgrade};
+    return{proxy,logic1,logic2,ProxyUpgrade1};
   }
 
 
     it("Should work logic1", async function () {
-      const { proxy,logic1,logic2,ProxyUpgrade } = await loadFixture(deployFixture);
+      const { proxy,logic1,logic2,ProxyUpgrade1 } = await loadFixture(deployFixture);
 
       await proxy.changeImplementation(logic1.address);
-      assert.equal(await logic1.x(),0);
+      assert.equal(await proxy.x(),0);
       
-      await ProxyUpgrade.changeX(50);
+      await ProxyUpgrade1.changeX(50);
       // assert.equal(await logic1.x(),50);
 
-      expect(await await logic1.x()).to.equal(50);
+      expect(await await proxy.x()).to.equal(50);
     });
 
 
     it("Upgrading Contracts", async function () {
-      const { proxy,logic1,logic2,ProxyUpgrade } = await loadFixture(deployFixture);
+      const { proxy,logic1,logic2,ProxyUpgrade1 } = await loadFixture(deployFixture);
 
       await proxy.changeImplementation(logic1.address);
-      assert.equal(await logic1.x(),0);
+      assert.equal(await proxy.x(),0);
       
-      await ProxyUpgrade.changeX(50);
-      assert.equal(await logic1.x(),50);
+      await ProxyUpgrade1.changeX(50);
+      assert.equal(await proxy.x(),50);
       ////logic 2
       await proxy.changeImplementation(logic2.address);
-      assert.equal(await logic2.x(),0);
+      assert.equal(await proxy.x(),50);
       
-      await ProxyUpgrade.changeX(150);
-      assert.equal(await logic2.x(),150);
+      await ProxyUpgrade1.changeX(150);
+      assert.equal(await proxy.x(),150);
 
       
       

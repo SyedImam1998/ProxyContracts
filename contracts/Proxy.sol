@@ -5,7 +5,7 @@ pragma solidity ^0.8.9;
 // import "hardhat/console.sol";
 
 contract Proxy{
-    
+    uint public x=0;
     address implementation;
 
   
@@ -15,7 +15,7 @@ contract Proxy{
 
     }
     fallback() external{
-        (bool s,)=implementation.call(msg.data);
+        (bool s,)=implementation.delegatecall(msg.data);
         require(s);
 
     }
